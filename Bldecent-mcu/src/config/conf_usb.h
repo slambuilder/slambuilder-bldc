@@ -132,10 +132,10 @@
 #define  UDI_CDC_SET_DTR_EXT(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)
 
-#define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
-extern bool my_callback_cdc_enable(void);
-#define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
-extern void my_callback_cdc_disable(void);
+#define UDI_CDC_ENABLE_EXT(port) bldecent_callback_cdc_enable()
+extern bool bldecent_callback_cdc_enable(void);
+#define UDI_CDC_DISABLE_EXT(port) bldecent_callback_cdc_disable()
+extern void bldecent_callback_cdc_disable(void);
 
 // #define  UDI_CDC_RX_NOTIFY(port) my_callback_rx_notify(port)
 // extern void my_callback_rx_notify(uint8_t port);

@@ -33,6 +33,8 @@
 #define BOARD_PINS_DAC_PORT 0
 #define BOARD_PINS_DAC_PIN 2
 
+static bool my_flag_autorize_cdc_transfer = false;
+
 int main (void)
 {
 	system_init();
@@ -47,24 +49,20 @@ int main (void)
 	/* Replace with your application code */
 	while (1)
 	{
+		if (my_flag_autorize_cdc_transfer) {
+			char c = udi_cdc_getc();
+			udi_cdc_putc(c);
+		}
 		PORT->Group[BOARD_PINS_DAC_PORT].OUTTGL.reg = 1 << BOARD_PINS_DAC_PIN;
 	}
 }
 
-static bool my_flag_autorize_cdc_transfert = false;
-bool my_callback_cdc_enable(void)
+bool bldecent_callback_cdc_enable(void)
 {
-	my_flag_autorize_cdc_transfert = true;
+	my_flag_autorize_cdc_transfer = true;
 	return true;
 }
-void my_callback_cdc_disable(void)
+void bldecent_callback_cdc_disable(void)
 {
-	my_flag_autorize_cdc_transfert = false;
-}
-void task(void)
-{
-	if (my_flag_autorize_cdc_transfert) {
-		udi_cdc_putc('A');
-		udi_cdc_getc();
-	}
+	my_flag_autorize_cdc_transfer = false;
 }

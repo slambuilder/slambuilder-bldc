@@ -36,6 +36,10 @@
 int main (void)
 {
 	system_init();
+	irq_initialize_vectors();
+	cpu_irq_enable();
+	board_init();
+	udc_start();
 
 	PORT->Group[BOARD_PINS_DAC_PORT].DIRSET.reg	= 1 << BOARD_PINS_DAC_PIN;
 	// PORT->Group[BOARD_PINS_DAC_PORT].PINCFG[PIN_PA02B_DAC_VOUT]
@@ -44,5 +48,23 @@ int main (void)
 	while (1)
 	{
 		PORT->Group[BOARD_PINS_DAC_PORT].OUTTGL.reg = 1 << BOARD_PINS_DAC_PIN;
+	}
+}
+
+static bool my_flag_autorize_cdc_transfert = false;
+bool my_callback_cdc_enable(void)
+{
+	my_flag_autorize_cdc_transfert = true;
+	return true;
+}
+void my_callback_cdc_disable(void)
+{
+	my_flag_autorize_cdc_transfert = false;
+}
+void task(void)
+{
+	if (my_flag_autorize_cdc_transfert) {
+		udi_cdc_putc('A');
+		udi_cdc_getc();
 	}
 }
